@@ -22,13 +22,13 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'launchy', '~> 2.4'
-  spec.add_dependency 'rest-client', '~> 1.8.0'
+  spec.add_dependency 'rest-client', '~> 1.8'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
-  spec.add_development_dependency 'pry', '~> 0.10.4'
-  spec.add_development_dependency 'pry-byebug', '~> 3.4.0'
-  spec.add_development_dependency 'rubocop', '~> 0.43.0'
+  spec.add_development_dependency 'pry', '~> 0.10'
+  spec.add_development_dependency 'pry-byebug', '~> 3.4'
+  spec.add_development_dependency 'rubocop', '~> 0.43'
 end
