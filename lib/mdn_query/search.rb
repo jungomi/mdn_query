@@ -1,9 +1,9 @@
-def retrieve(url)
+def retrieve(url, query)
   response = RestClient::Request.execute(method: :get, url: url,
                                          headers: { accept: 'json' })
   response = MdnQuery::JsonResponse.new(response.headers, response.code,
                                         response.body)
-  MdnQuery::Result.new(response)
+  MdnQuery::Result.new(query, response)
 end
 
 module MdnQuery
@@ -18,7 +18,7 @@ module MdnQuery
       @query = query
       @css_classnames = options[:css_classnames]
       @locale = options[:locale] || 'enUS'
-      @highlight = options[:highlight]
+      @highlight = options[:highlight] || false
       @html_attributes = options[:html_attributes]
       @topic = options[:topic] || 'js'
     end
@@ -37,7 +37,7 @@ module MdnQuery
     end
 
     def execute
-      @result = retrieve(url)
+      @result = retrieve(url, @query)
     end
 
     def next
@@ -45,8 +45,8 @@ module MdnQuery
         execute
       elsif @result.next?
         query_url = url
-        query_url << "&page=#{@result.current + 1}"
-        @result = retrieve(query_url)
+        query_url << "&page=#{@result.current_page + 1}"
+        @result = retrieve(query_url, @query)
       end
     end
 
@@ -55,8 +55,8 @@ module MdnQuery
         execute
       elsif @result.previous?
         query_url = url
-        query_url << "&page=#{@result.current - 1}"
-        @result = retrieve(query_url)
+        query_url << "&page=#{@result.current_page - 1}"
+        @result = retrieve(query_url, @query)
       end
     end
   end

@@ -1,9 +1,16 @@
+Item = Struct.new(:title, :description, :url) do
+  def to_s
+    "#{title}\n#{description}\n#{url}"
+  end
+end
+
 module MdnQuery
   # A search result
   class Result
-    attr_reader :items, :pages, :response, :total
+    attr_reader :items, :pages, :query, :response, :total
 
-    def initialize(response)
+    def initialize(query, response)
+      @query = query
       @response = response
       json = response.to_h
       @pages = {
@@ -27,8 +34,13 @@ module MdnQuery
       !empty? && @pages[:current] > @pages[:range].first
     end
 
-    def current
+    def current_page
       @pages[:current]
+    end
+
+    def to_list
+      items = @items.map { |i| Item.new(i[:title], i[:excerpt], i[:url]) }
+      MdnQuery::List.new(query, *items)
     end
   end
 end

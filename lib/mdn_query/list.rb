@@ -1,3 +1,17 @@
+def number_items(items)
+  num_width = items.size / 10 + 1
+
+  items.map.with_index do |item, index|
+    entry = "#{(index + 1).to_s.rjust(num_width)}) "
+    entry << pad_left(item.to_s, num_width + 2)
+  end
+end
+
+def pad_left(str, num)
+  pad = ' ' * num
+  str.gsub("\n", "\n#{pad}")
+end
+
 module MdnQuery
   # List of search results
   class List
@@ -23,6 +37,10 @@ module MdnQuery
 
     def each(&block)
       items.each(&block)
+    end
+
+    def to_s
+      "Results for '#{query}':\n#{number_items(items).join("\n")}"
     end
   end
 end
