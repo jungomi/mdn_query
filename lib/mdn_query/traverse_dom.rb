@@ -4,22 +4,22 @@ module MdnQuery
     attr_reader :current, :sections
     attr_accessor :dom
 
-    def self.extract_sections(dom)
-      traverser = new(dom)
+    def self.extract_sections(dom, name: 'root')
+      traverser = new(dom, name: name)
       traverser.traverse
       traverser.sections
     end
 
-    def self.traverse(dom)
-      traverser = new(dom)
+    def self.traverse(dom, name: 'root')
+      traverser = new(dom, name: name)
       traverser.traverse
       traverser
     end
 
-    def initialize(dom)
+    def initialize(dom, name: 'root')
       @dom = dom
       @sections = []
-      @current = MdnQuery::Section.new('article')
+      @current = MdnQuery::Section.new(name)
       @sections << current
     end
 

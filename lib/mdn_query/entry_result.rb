@@ -5,8 +5,9 @@ module MdnQuery
 
     def initialize(response)
       super(response)
+      title = response.dom.css('h1').text
       article = response.dom.css('article')
-      @sections = MdnQuery::TraverseDom.extract_sections(article)
+      @sections = MdnQuery::TraverseDom.extract_sections(article, name: title)
     end
   end
 end
