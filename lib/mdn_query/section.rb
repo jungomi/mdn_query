@@ -18,7 +18,7 @@ module MdnQuery
     end
 
     def append_text(text)
-      @text << text
+      @text << text.gsub(/\n[[:blank:]]+|[[:blank:]]+\n/, "\n")
     end
 
     def append_code(snippet, language: '')
@@ -26,8 +26,10 @@ module MdnQuery
     end
 
     def to_s
-      str = "#{'#' * level} #{name}\n\n#{join_text}\n\n#{join_children}"
-      str.gsub!(/\n{3,}/, "\n\n")
+      str = "#{'#' * level} #{name}\n\n#{join_text}\n\n#{join_children}\n"
+      str.gsub!(/\n+[[:blank:]]+\n+|\n{3,}/, "\n\n")
+      str.chomp!
+      str
     end
 
     private
