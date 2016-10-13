@@ -1,5 +1,9 @@
 Metrics/AbcSize:
   Max: 20
+Metrics/CyclomaticComplexity:
+  Max: 10
 Metrics/MethodLength:
   CountComments: false
   Max: 25
+Metrics/PerceivedComplexity:
+  Max: 10
