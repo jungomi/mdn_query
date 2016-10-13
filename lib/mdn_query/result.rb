@@ -1,9 +1,3 @@
-Item = Struct.new(:title, :description, :url) do
-  def to_s
-    "#{title}\n#{description}\n#{url}"
-  end
-end
-
 module MdnQuery
   # A search result
   class Result
@@ -39,7 +33,9 @@ module MdnQuery
     end
 
     def to_list
-      items = @items.map { |i| Item.new(i[:title], i[:excerpt], i[:url]) }
+      items = @items.map do |i|
+        MdnQuery::Entry.new(i[:title], i[:excerpt], i[:url])
+      end
       MdnQuery::List.new(query, *items)
     end
   end

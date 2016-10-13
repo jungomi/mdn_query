@@ -1,6 +1,8 @@
+require 'launchy'
 require 'rest-client'
 
 require 'mdn_query/article'
+require 'mdn_query/entry'
 require 'mdn_query/list'
 require 'mdn_query/query'
 require 'mdn_query/result'
