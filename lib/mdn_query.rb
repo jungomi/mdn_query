@@ -1,3 +1,5 @@
+require 'English'
+require 'nokogiri'
 require 'launchy'
 require 'rest-client'
 
@@ -12,6 +14,8 @@ require 'mdn_query/response'
 require 'mdn_query/html_response'
 require 'mdn_query/json_response'
 require 'mdn_query/search'
+require 'mdn_query/section'
+require 'mdn_query/traverse_dom'
 require 'mdn_query/version'
 
 # Query the MDN docs
