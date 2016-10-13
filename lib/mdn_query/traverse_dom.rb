@@ -38,9 +38,9 @@ module MdnQuery
         when 'p'
           @current.append_text(child.text)
         when 'ul'
-          append_list(child)
+          @current.append_text(convert_list(child))
         when 'dl'
-          append_definition(child)
+          @current.append_text(convert_description(child))
         when 'pre'
           @current.append_code(child.text, language: 'javascript')
         when /\Ah(?<level>\d)\z/
@@ -56,26 +56,30 @@ module MdnQuery
 
     private
 
-    def append_list(ul)
+    def convert_list(ul)
       lines = ul.children.map do |child|
-        if child.name == 'li'
+        if child.name == 'ul'
+          convert_list(child)
+        elsif child.name == 'li'
           "- #{child.text}"
         else
           child.text
         end
       end
-      @current.append_text(lines.join)
+      lines.join
     end
 
-    def append_definition(dl)
+    def convert_description(dl)
       lines = dl.children.map do |child|
-        if child.name == 'dt'
+        if child.name == 'dd' || child.name == 'dl'
+          convert_description(child)
+        elsif child.name == 'dt'
           "\n**#{child.text}**\n"
         else
           child.text
         end
       end
-      @current.append_text(lines.join)
+      lines.join
     end
   end
 end
