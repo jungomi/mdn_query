@@ -1,3 +1,11 @@
+def retrieve_content(url)
+  response = RestClient::Request.execute(method: :get, url: url,
+                                         headers: { accept: 'text/html' })
+  response = MdnQuery::HtmlResponse.new(response.headers, response.code,
+                                        response.body)
+  MdnQuery::EntryResult.new(response)
+end
+
 module MdnQuery
   # An entry in the MDN docs
   class Entry
@@ -15,6 +23,11 @@ module MdnQuery
 
     def open
       Launchy.open(@url)
+    end
+
+    def content
+      return @content unless @content.nil?
+      @content = retrieve_content(url)
     end
   end
 end

@@ -1,11 +1,16 @@
 module MdnQuery
   # A HTTP response
   class Response
-    attr_reader :code, :headers
+    attr_reader :body, :code, :headers
 
-    def initialize(headers, code)
+    def initialize(headers, code, body)
       @headers = headers
       @code = code
+      @body = body
+    end
+
+    def to_s
+      @body.to_s
     end
   end
 end

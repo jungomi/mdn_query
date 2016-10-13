@@ -3,7 +3,7 @@ def retrieve(url, query)
                                          headers: { accept: 'json' })
   response = MdnQuery::JsonResponse.new(response.headers, response.code,
                                         response.body)
-  MdnQuery::Result.new(query, response)
+  MdnQuery::SearchResult.new(response, query)
 end
 
 module MdnQuery
