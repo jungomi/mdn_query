@@ -1,11 +1,3 @@
-def retrieve(url, query)
-  response = RestClient::Request.execute(method: :get, url: url,
-                                         headers: { accept: 'json' })
-  response = MdnQuery::JsonResponse.new(response.headers, response.code,
-                                        response.body)
-  MdnQuery::SearchResult.new(response, query)
-end
-
 module MdnQuery
   # A search request to the MDN docs
   class Search
@@ -58,6 +50,16 @@ module MdnQuery
         query_url << "&page=#{@result.current_page - 1}"
         @result = retrieve(query_url, @query)
       end
+    end
+
+    private
+
+    def retrieve(url, query)
+      response = RestClient::Request.execute(method: :get, url: url,
+                                             headers: { accept: 'json' })
+      response = MdnQuery::JsonResponse.new(response.headers, response.code,
+                                            response.body)
+      MdnQuery::SearchResult.new(response, query)
     end
   end
 end
