@@ -21,12 +21,13 @@ module MdnQuery
       @text << text
     end
 
-    def append_code(snippet)
-      @text << "\n```javascript\n#{snippet}\n```\n"
+    def append_code(snippet, language: '')
+      @text << "\n```#{language}\n#{snippet}\n```\n"
     end
 
     def to_s
-      "#{'#' * level} #{name}\n\n#{join_text}\n\n#{join_children}"
+      str = "#{'#' * level} #{name}\n\n#{join_text}\n\n#{join_children}"
+      str.gsub!(/\n{3,}/, "\n\n")
     end
 
     private
