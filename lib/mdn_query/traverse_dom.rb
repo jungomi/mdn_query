@@ -4,6 +4,8 @@ module MdnQuery
     attr_reader :current, :sections
     attr_accessor :dom
 
+    BLACKLIST = %w(Specifications Browser_compatibility).freeze
+
     def self.extract_sections(dom, name: 'root')
       traverser = new(dom, name: name)
       traverser.traverse
@@ -42,9 +44,14 @@ module MdnQuery
         when 'pre'
           @current.append_code(child.text, language: 'javascript')
         when /\Ah(?<level>\d)\z/
+          next if blacklisted?(child[:id])
           create_child($LAST_MATCH_INFO[:level].to_i, child[:id].tr('_', ' '))
         end
       end
+    end
+
+    def blacklisted?(id)
+      BLACKLIST.include?(id)
     end
 
     private
