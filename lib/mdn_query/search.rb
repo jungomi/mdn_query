@@ -5,8 +5,7 @@ module MdnQuery
                   :query, :result, :topic
 
     def initialize(query, options = {})
-      @url = MdnQuery::Query.base_url
-      @url << '.json'
+      @url = "#{MdnQuery::BASE_URL}.json"
       @query = query
       @css_classnames = options[:css_classnames]
       @locale = options[:locale] || 'enUS'
