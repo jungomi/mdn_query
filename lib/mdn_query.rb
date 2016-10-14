@@ -15,6 +15,7 @@ require 'mdn_query/html_response'
 require 'mdn_query/json_response'
 require 'mdn_query/search'
 require 'mdn_query/section'
+require 'mdn_query/table'
 require 'mdn_query/traverse_dom'
 require 'mdn_query/version'
 

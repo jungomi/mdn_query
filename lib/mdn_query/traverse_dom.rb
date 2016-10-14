@@ -46,6 +46,8 @@ module MdnQuery
         when /\Ah(?<level>\d)\z/
           next if blacklisted?(child[:id])
           create_child($LAST_MATCH_INFO[:level].to_i, child[:id].tr('_', ' '))
+        when 'table'
+          @current.append_text(convert_table(child))
         end
       end
     end
@@ -80,6 +82,28 @@ module MdnQuery
         end
       end
       lines.join
+    end
+
+    def convert_table(table)
+      body = table.css('tbody > tr').map { |tr| extract_table_row(tr) }
+      head_row = table.css('thead > tr').first
+      head = if head_row.nil?
+               # Make first row in body the table heading
+               body.shift
+             else
+               extract_table_row(head_row)
+             end
+      table = MdnQuery::Table.new(head, *body)
+      table.to_s
+    end
+
+    def extract_table_row(tr)
+      cols = []
+      tr.children.each do |child|
+        next unless child.name == 'th' || child.name == 'td'
+        cols << child.text
+      end
+      cols
     end
   end
 end
