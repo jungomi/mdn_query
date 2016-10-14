@@ -6,7 +6,7 @@ module MdnQuery
 
     def initialize(query, options = {})
       @url = MdnQuery::Query.base_url
-      @url << '.json' if options[:json]
+      @url << '.json'
       @query = query
       @css_classnames = options[:css_classnames]
       @locale = options[:locale] || 'enUS'

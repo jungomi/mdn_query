@@ -9,5 +9,9 @@ module MdnQuery
       article = response.dom.css('article')
       @sections = MdnQuery::TraverseDom.extract_sections(article, name: title)
     end
+
+    def to_s
+      @sections.to_s
+    end
   end
 end
