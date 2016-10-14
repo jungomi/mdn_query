@@ -32,8 +32,11 @@ module MdnQuery
       @current = @current.create_child(name)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def traverse
+      within_blacklist = false
       @dom.children.each do |child|
+        next if within_blacklist && child.name.match(/\Ah\d\z/).nil?
         case child.name
         when 'p'
           @current.append_text(child.text)
@@ -44,13 +47,15 @@ module MdnQuery
         when 'pre'
           @current.append_code(child.text, language: 'javascript')
         when /\Ah(?<level>\d)\z/
-          next if blacklisted?(child[:id])
+          within_blacklist = blacklisted?(child[:id])
+          next if within_blacklist
           create_child($LAST_MATCH_INFO[:level].to_i, child[:id].tr('_', ' '))
         when 'table'
           @current.append_text(convert_table(child))
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def blacklisted?(id)
       BLACKLIST.include?(id)
