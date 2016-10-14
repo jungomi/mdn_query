@@ -32,7 +32,6 @@ module MdnQuery
       @current = @current.create_child(name)
     end
 
-    # rubocop:disable Metrics/AbcSize
     def traverse
       within_blacklist = false
       @dom.children.each do |child|
@@ -52,10 +51,14 @@ module MdnQuery
           create_child($LAST_MATCH_INFO[:level].to_i, child[:id].tr('_', ' '))
         when 'table'
           @current.append_text(convert_table(child))
+        when 'div'
+          next if child[:class].nil?
+          if child[:class].include?('note') || child[:class].include?('warning')
+            @current.append_text("\n> #{child.text}\n")
+          end
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def blacklisted?(id)
       BLACKLIST.include?(id)
