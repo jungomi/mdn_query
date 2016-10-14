@@ -33,6 +33,9 @@ module MdnQuery
     end
 
     def traverse
+      unless @dom.css('div.nonStandard').nil?
+        @current.append_text("\n> ***Non-standard***\n")
+      end
       within_blacklist = false
       @dom.children.each do |child|
         next if within_blacklist && child.name.match(/\Ah\d\z/).nil?
