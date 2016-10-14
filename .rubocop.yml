@@ -1,9 +1,17 @@
 Metrics/AbcSize:
   Max: 20
+  Exclude:
+    - lib/mdn_query/traverse_dom.rb
 Metrics/CyclomaticComplexity:
   Max: 10
+  Exclude:
+    - lib/mdn_query/traverse_dom.rb
 Metrics/MethodLength:
   CountComments: false
   Max: 25
+  Exclude:
+    - lib/mdn_query/traverse_dom.rb
 Metrics/PerceivedComplexity:
   Max: 10
+  Exclude:
+    - lib/mdn_query/traverse_dom.rb
