@@ -1,15 +1,28 @@
 module MdnQuery
   # A table in a document
   class Table
-    attr_accessor :body, :heading
+    attr_reader :body, :heading, :size
 
     def initialize(heading, *rows)
       @heading = heading
-      @body = rows
+      @size = heading.size
+      @body = []
+      rows.each { |row| add_row(row) }
+    end
+
+    def add_row(row)
+      if row.size < @size
+        row.fill('', row.size...@size)
+      elsif row.size > @size
+        @heading.fill('', @size...row.size)
+        @body.each { |r| r.fill('', @size...row.size) }
+        @size = row.size
+      end
+      @body << row
     end
 
     def cols
-      @heading.size
+      @size
     end
 
     def rows
