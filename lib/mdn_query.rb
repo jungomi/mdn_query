@@ -28,6 +28,6 @@ module MdnQuery
 
   def self.first_match(query, options = {})
     item = list(query, options).first
-    item.content.sections
+    item.content.document
   end
 end

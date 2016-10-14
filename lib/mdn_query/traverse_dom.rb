@@ -1,15 +1,14 @@
 module MdnQuery
-  # Traverses the DOM and creates sections
+  # Traverses the DOM and creates a document
   class TraverseDom
-    attr_reader :current, :sections
-    attr_accessor :dom
+    attr_reader :current, :dom, :document
 
     BLACKLIST = %w(Specifications Browser_compatibility).freeze
 
-    def self.extract_sections(dom, name: 'root')
+    def self.extract_document(dom, name: 'root')
       traverser = new(dom, name: name)
       traverser.traverse
-      traverser.sections
+      traverser.document
     end
 
     def self.traverse(dom, name: 'root')
@@ -20,9 +19,8 @@ module MdnQuery
 
     def initialize(dom, name: 'root')
       @dom = dom
-      @sections = []
       @current = MdnQuery::Section.new(name)
-      @sections << current
+      @document = @current
     end
 
     def create_child(desired_level, name)
