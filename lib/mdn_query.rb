@@ -24,7 +24,7 @@ module MdnQuery
   end
 
   def self.first_match(query, options = {})
-    item = list(query, options).first
-    item.content.document
+    entry = list(query, options).first
+    entry.content
   end
 end
