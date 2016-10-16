@@ -60,6 +60,7 @@ module MdnQuery
     end
 
     def body_str(col_sizes)
+      return '' if @body.empty?
       rows = @body.map { |row| "| #{pad_cols(row, col_sizes).join(' | ')} |" }
       "#{rows.join("\n")}\n"
     end
