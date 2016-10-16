@@ -30,7 +30,7 @@ module MdnQuery
       dom = Nokogiri::HTML(response.body)
       title = dom.css('h1').text
       article = dom.css('article')
-      MdnQuery::TraverseDom.extract_document(article, name: title)
+      MdnQuery::TraverseDom.create_document(article, title, url)
     end
   end
 end

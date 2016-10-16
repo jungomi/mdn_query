@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'launchy'
 require 'rest-client'
 
+require 'mdn_query/document'
 require 'mdn_query/entry'
 require 'mdn_query/list'
 require 'mdn_query/result'
