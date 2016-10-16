@@ -30,7 +30,8 @@ module MdnQuery
     end
 
     def to_s
-      "Results for '#{query}':\n#{number_items(items).join("\n")}"
+      return "No results for '#{query}'" if empty?
+      "Results for '#{query}':\n#{number_items(items).join("\n")}\n"
     end
 
     private
