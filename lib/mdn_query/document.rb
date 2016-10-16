@@ -3,7 +3,7 @@ module MdnQuery
   class Document
     attr_reader :title, :url, :section
 
-    def initialize(title, url)
+    def initialize(title, url = nil)
       @title = title
       @url = url
       @section = MdnQuery::Section.new(title)
