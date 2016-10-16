@@ -8,7 +8,7 @@ module MdnQuery
       @url = "#{MdnQuery::BASE_URL}.json"
       @query = query
       @css_classnames = options[:css_classnames]
-      @locale = options[:locale] || 'enUS'
+      @locale = options[:locale] || 'en-US'
       @highlight = options[:highlight] || false
       @html_attributes = options[:html_attributes]
       @topic = options[:topic] || 'js'
@@ -17,13 +17,12 @@ module MdnQuery
     def url
       query_url = "#{@url}?q=#{@query}&locale=#{@locale}&topic=#{@topic}"
       unless @css_classnames.nil?
-        query_url << "&css_classnames#{@css_classnames}"
+        query_url << "&css_classnames=#{@css_classnames}"
       end
       unless @html_attributes.nil?
         query_url << "&html_attributes=#{@html_attributes}"
       end
       query_url << "&highlight=#{@highlight}" unless @highlight.nil?
-
       query_url
     end
 
