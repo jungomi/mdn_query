@@ -18,17 +18,18 @@ module MdnQuery
     end
 
     def append_text(text)
-      @text << text.gsub(/\n[[:blank:]]+|[[:blank:]]+\n/, "\n")
+      trimmed_text = text.gsub(/\n[[:blank:]]+|[[:blank:]]+\n/, "\n")
+      @text << trimmed_text unless text_empty?(trimmed_text)
     end
 
     def append_code(snippet, language: '')
-      @text << "\n```#{language}\n#{snippet}\n```\n"
+      @text << "\n```#{language}\n#{snippet}\n```\n" unless text_empty?(snippet)
     end
 
     def to_s
       str = "#{'#' * level} #{name}\n\n#{join_text}\n\n#{join_children}\n"
       str.gsub!(/\n+[[:blank:]]+\n+|\n{3,}/, "\n\n")
-      str.chomp!
+      str.strip!
       str
     end
 
@@ -40,6 +41,10 @@ module MdnQuery
 
     def join_children
       children.map(&:to_s).join("\n")
+    end
+
+    def text_empty?(text)
+      !text.match(/\A\s*\z/).nil?
     end
   end
 end
