@@ -26,6 +26,7 @@ module TestUtils
     def called_with_args?(*args)
       called? && @state[:with_args].include?(args)
     end
+    alias called_with? called_with_args?
 
     def called_at_least?(num)
       called? && @state[:count] > num
@@ -38,10 +39,12 @@ module TestUtils
     def call_count
       @state[:count]
     end
+    alias count call_count
 
     def call_args
       @state[:with_args]
     end
+    alias args call_args
 
     def reset
       @state = {
