@@ -1,3 +1,13 @@
+Metrics/ClassLength:
+  CountComments: false
+  Max: 100
+  Exclude:
+    - test/**/*.rb
+Metrics/ModuleLength:
+  CountComments: false
+  Max: 100
+  Exclude:
+    - test/**/*.rb
 Metrics/AbcSize:
   Max: 20
   Exclude:
