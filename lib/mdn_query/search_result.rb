@@ -7,8 +7,7 @@ module MdnQuery
       @query = query
       @pages = {
         count: json[:pages] || 0,
-        current: json[:page],
-        range: json[:start]..json[:end]
+        current: json[:page]
       }
       @total = json[:count]
       @items = json[:documents]
@@ -19,11 +18,11 @@ module MdnQuery
     end
 
     def next?
-      !empty? && @pages[:current] < @pages[:range].last
+      !empty? && @pages[:current] < @pages[:count]
     end
 
     def previous?
-      !empty? && @pages[:current] > @pages[:range].first
+      !empty? && @pages[:current] > 1
     end
 
     def current_page
