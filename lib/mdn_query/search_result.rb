@@ -1,12 +1,10 @@
 module MdnQuery
   # A result from a search query
-  class SearchResult < MdnQuery::Result
+  class SearchResult
     attr_reader :items, :pages, :query, :total
 
-    def initialize(response, query)
-      super(response)
+    def initialize(query, json)
       @query = query
-      json = response.to_h
       @pages = {
         count: json[:pages] || 0,
         current: json[:page],

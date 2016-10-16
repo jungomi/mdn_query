@@ -27,9 +27,10 @@ module MdnQuery
     def retrieve(url)
       response = RestClient::Request.execute(method: :get, url: url,
                                              headers: { accept: 'text/html' })
-      response = MdnQuery::HtmlResponse.new(response.headers, response.code,
-                                            response.body)
-      MdnQuery::EntryResult.new(response)
+      dom = Nokogiri::HTML(response.body)
+      title = dom.css('h1').text
+      article = dom.css('article')
+      MdnQuery::TraverseDom.extract_document(article, name: title)
     end
   end
 end

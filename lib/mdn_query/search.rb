@@ -31,7 +31,7 @@ module MdnQuery
       @result = retrieve(url, @query)
     end
 
-    def next
+    def next_page
       if @result.nil?
         execute
       elsif @result.next?
@@ -41,7 +41,7 @@ module MdnQuery
       end
     end
 
-    def previous
+    def previous_page
       if @result.nil?
         execute
       elsif @result.previous?
@@ -56,9 +56,8 @@ module MdnQuery
     def retrieve(url, query)
       response = RestClient::Request.execute(method: :get, url: url,
                                              headers: { accept: 'json' })
-      response = MdnQuery::JsonResponse.new(response.headers, response.code,
-                                            response.body)
-      MdnQuery::SearchResult.new(response, query)
+      json = JSON.parse(response.body, symbolize_names: true)
+      MdnQuery::SearchResult.new(query, json)
     end
   end
 end
