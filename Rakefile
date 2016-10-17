@@ -1,6 +1,5 @@
 require 'bundler/gem_tasks'
 require 'mdn_query'
-require 'pry'
 require 'rake/testtask'
 require 'rubocop/rake_task'
 
@@ -16,9 +15,5 @@ Rake::TestTask.new(:test) do |t, args|
 end
 
 RuboCop::RakeTask.new(:lint)
-
-task :repl do
-  Pry.start
-end
 
 task default: [:lint, :test]

@@ -1,3 +1,8 @@
+Metrics/BlockLength:
+  CountComments: false
+  Max: 25
+  Exclude:
+    - mdn_query.gemspec
 Metrics/ClassLength:
   CountComments: false
   Max: 100

@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'mdn_query'
+require 'launchy'
+require 'slop'
+require 'tty-pager'
+require 'tty-prompt'
+
+prompt = TTY::Prompt.new
+pager = TTY::Pager.new
+
+opts = Slop.parse do |o|
+  o.banner = 'Usage: mdn-query [options] <search-term>'
+  o.separator ''
+  o.separator 'Options:'
+  o.on '-v', '--version', "Shows the program's version" do
+    puts MdnQuery::VERSION
+  end
+  o.on '-h', '--help', 'Shows this help message' do
+    prompt.say o
+    exit
+  end
+  o.bool '-f', '--first', '--first-match',
+         'Returns the first match instead of a list'
+  o.bool '-o', '--open', '--open-browser',
+         'Opens the appropriate page in the default web browser'
+end
+
+if opts.arguments.empty?
+  prompt.say opts
+  exit
+end
+
+search_term = opts.arguments.join(' ')
+case [opts.first?, opts.open?]
+when [true, true]
+  MdnQuery.open_first_match(search_term)
+when [true, false]
+  pager.page MdnQuery.first_match(search_term)
+when [false, true]
+  MdnQuery.open_list(search_term)
+when [false, false]
+  list = MdnQuery.list(search_term)
+  if list.empty?
+    prompt.say list
+    exit
+  end
+  selected_entry = prompt.select("Results for '#{search_term}'") do |menu|
+    menu.enum ')'
+    list.each do |entry|
+      menu.choice entry.title, entry
+    end
+  end
+  pager.page selected_entry.content
+end
