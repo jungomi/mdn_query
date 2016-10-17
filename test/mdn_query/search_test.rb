@@ -108,6 +108,14 @@ class MdnQuerySearchTest < Minitest::Test
     end
   end
 
+  def test_open
+    expected_url = "#{url}?q=Query&locale=en-US&topic=js&highlight=false"
+    spy = TestUtils::Spy.new
+    Launchy.stub(:open, spy.method) { @search.open }
+    assert spy.called_once?
+    assert spy.called_with_args?(expected_url)
+  end
+
   private
 
   def spy_execute_retrieve

@@ -31,4 +31,14 @@ module MdnQuery
     entry = list(query, options).first
     entry.content
   end
+
+  def self.open_list(query, options = {})
+    search = MdnQuery::Search.new(query, options)
+    search.open
+  end
+
+  def self.open_first_match(query, options = {})
+    entry = list(query, options).first
+    entry.open
+  end
 end

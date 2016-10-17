@@ -50,6 +50,11 @@ module MdnQuery
       end
     end
 
+    def open
+      html_url = url.sub('.json?', '?')
+      Launchy.open(html_url)
+    end
+
     private
 
     def retrieve(url, query)
