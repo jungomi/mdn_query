@@ -25,8 +25,13 @@ module MdnQuery
     private
 
     def retrieve(url)
-      response = RestClient::Request.execute(method: :get, url: url,
-                                             headers: { accept: 'text/html' })
+      begin
+        response = RestClient::Request.execute(method: :get, url: url,
+                                               headers: { accept: 'text/html' })
+      rescue RestClient::Exception, SocketError => e
+        raise MdnQuery::HttpRequestFailed.new(url, e),
+              'Could not retrieve entry'
+      end
       dom = Nokogiri::HTML(response.body)
       title = dom.css('h1').text
       article = dom.css('article')

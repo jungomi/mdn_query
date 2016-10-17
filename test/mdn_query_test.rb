@@ -17,10 +17,15 @@ class MdnQueryTest < Minitest::Test
   end
 
   def test_first_match_no_entry
+    query = 'Query'
     stub = TestUtils::Spy.new([])
     ::MdnQuery.stub(:list, stub.method) do
-      error = assert_raises(RuntimeError) { ::MdnQuery.first_match('Query') }
+      error = assert_raises(::MdnQuery::NoEntryFound) do
+        ::MdnQuery.first_match(query)
+      end
       assert_equal error.message, 'No entry found'
+      assert_equal error.query, query
+      assert_equal error.options, {}
     end
   end
 

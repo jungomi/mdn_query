@@ -53,8 +53,13 @@ module MdnQuery
     private
 
     def retrieve(url, query)
-      response = RestClient::Request.execute(method: :get, url: url,
-                                             headers: { accept: 'json' })
+      begin
+        response = RestClient::Request.execute(method: :get, url: url,
+                                               headers: { accept: 'json' })
+      rescue RestClient::Exception, SocketError => e
+        raise MdnQuery::HttpRequestFailed.new(url, e),
+              'Could not retrieve search result'
+      end
       json = JSON.parse(response.body, symbolize_names: true)
       MdnQuery::SearchResult.new(query, json)
     end
