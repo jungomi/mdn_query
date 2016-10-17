@@ -24,6 +24,7 @@ module MdnQuery
     if list.empty?
       raise MdnQuery::NoEntryFound.new(query, options), 'No entry found'
     end
+    list
   end
 
   def self.first_match(query, options = {})
