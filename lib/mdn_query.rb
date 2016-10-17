@@ -24,6 +24,7 @@ module MdnQuery
 
   def self.first_match(query, options = {})
     entry = list(query, options).first
+    raise 'No entry found' if entry.nil?
     entry.content
   end
 end
