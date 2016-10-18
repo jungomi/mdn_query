@@ -1,27 +1,63 @@
 module MdnQuery
-  # Traverses the DOM and creates a document
+  # A DOM traverser that extracts relevant elements.
   class TraverseDom
-    attr_reader :current, :dom, :document
+    # @return [MdnQuery::Section] the current section
+    attr_reader :current_section
 
+    # @return [Nokogiri::HTML::Document] the DOM that is traversed
+    attr_reader :dom
+
+    # @return [MdnQuery::Document] the document that contains the extracted text
+    attr_reader :document
+
+    # Sections that are blacklisted and excluded from the document.
     BLACKLIST = %w(Specifications Browser_compatibility).freeze
 
+    # Creates a new document with the extracted text.
+    #
+    # @param dom [Nokogiri::HTML::Document] the DOM that is traversed
+    # @param title [String] the title of the document
+    # @param url [String] the URL to the document on the web
+    # @return [MdnQuery::Document] the document with the extracted text
     def self.create_document(dom, title, url)
       document = MdnQuery::Document.new(title, url)
       fill_document(dom, document)
     end
 
+    # Fills a document with the extracted text.
+    #
+    # @param dom [Nokogiri::HTML::Document] the DOM that is traversed
+    # @param document [MdnQuery::Document] the document to be filled
+    # @return [MdnQuery::Document] the document with the extracted text
     def self.fill_document(dom, document)
       traverser = new(dom, document: document)
       traverser.traverse
       traverser.document
     end
 
+    # Creates a new DOM traverser.
+    #
+    # The given document is used to save the extracted text. If no document is
+    # given, a new one is created with the generic title 'root' and the given
+    # url.
+    #
+    # The DOM is not automatically traversed (use {#traverse}).
+    #
+    # @param dom [Nokogiri::HTML::Document] the DOM that is traversed
+    # @param document [MdnQuery::Document] the document to be filled
+    # @param url [String] the URL for the new document if none was provided
+    # @return [MdnQuery::TraverseDom]
     def initialize(dom, document: nil, url: nil)
       @dom = dom
       @document = document || MdnQuery::Document.new('root', url)
       @current_section = @document.section
     end
 
+    # Creates a new child section on the appropriate parent section.
+    #
+    # @param desired_level [Fixnum] the desired level for the child section
+    # @param name [String] the name and title of the child section
+    # @return [MdnQuery::Section] the newly created child section
     def create_child(desired_level, name)
       until @current_section.level < desired_level ||
             @current_section.parent.nil?
@@ -30,6 +66,9 @@ module MdnQuery
       @current_section = @current_section.create_child(name)
     end
 
+    # Traverses the DOM and extracts relevant informations into the document.
+    #
+    # @return [void]
     def traverse
       unless @dom.css('div.nonStandard').nil?
         @current_section.append_text("\n> ***Non-standard***\n")
@@ -61,6 +100,10 @@ module MdnQuery
       end
     end
 
+    # Returns whether the id is blacklisted.
+    #
+    # @param id [String] the id to be tested
+    # @return [Boolean]
     def blacklisted?(id)
       BLACKLIST.include?(id)
     end

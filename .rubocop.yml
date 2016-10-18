@@ -8,6 +8,7 @@ Metrics/ClassLength:
   Max: 100
   Exclude:
     - test/**/*.rb
+    - lib/mdn_query/traverse_dom.rb
 Metrics/ModuleLength:
   CountComments: false
   Max: 100
