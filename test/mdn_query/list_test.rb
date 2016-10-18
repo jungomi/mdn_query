@@ -29,6 +29,14 @@ class MdnQueryListTest < Minitest::Test
     assert @list[10].nil?
   end
 
+  def test_each
+    spy = TestUtils::Spy.new
+    @list.each { |item| spy.method.call(item) }
+    assert spy.called?
+    assert spy.called_times?(@list.items.size)
+    @list.items.each { |item| assert spy.called_with_args?(item) }
+  end
+
   def test_to_s
     expected = "Results for 'Query':\n"\
                "1) Item one\n"\
