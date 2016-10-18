@@ -37,15 +37,26 @@ end
 search_term = opts.arguments.join(' ')
 case [opts.first?, opts.open?]
 when [true, true]
-  MdnQuery.open_first_match(search_term)
+  begin
+    MdnQuery.open_first_match(search_term)
+  rescue MdnQuery::NoEntryFound => e
+    prompt.say e.message
+    exit
+  end
 when [true, false]
-  pager.page MdnQuery.first_match(search_term)
+  begin
+    pager.page MdnQuery.first_match(search_term)
+  rescue MdnQuery::NoEntryFound => e
+    prompt.say e.message
+    exit
+  end
 when [false, true]
   MdnQuery.open_list(search_term)
 when [false, false]
-  list = MdnQuery.list(search_term)
-  if list.empty?
-    prompt.say list
+  begin
+    list = MdnQuery.list(search_term)
+  rescue MdnQuery::NoEntryFound
+    prompt.say "No results for '#{search_term}'"
     exit
   end
   selected_entry = prompt.select("Results for '#{search_term}'") do |menu|
