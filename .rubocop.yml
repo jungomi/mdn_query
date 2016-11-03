@@ -3,6 +3,7 @@ Metrics/BlockLength:
   Max: 25
   Exclude:
     - mdn_query.gemspec
+    - lib/mdn_query/traverse_dom.rb
 Metrics/ClassLength:
   CountComments: false
   Max: 100
