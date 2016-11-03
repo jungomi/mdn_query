@@ -123,6 +123,36 @@ class MdnQuerySearchTest < Minitest::Test
     assert spy.called_with_args?(expected_url)
   end
 
+  def test_retrieve_throws
+    spy = TestUtils::Spy.new
+    RestClient::Request.stub(:execute, spy.throws(RestClient::Exception)) do
+      error = assert_raises(::MdnQuery::HttpRequestFailed) do
+        @search.send(:retrieve, @url, @query)
+      end
+      assert_equal error.message, 'Could not retrieve search result'
+      assert spy.thrown_once?
+      assert_equal error.url, @url
+    end
+  end
+
+  def test_retrieve
+    json = {
+      pages: 10,
+      page: 1,
+      count: 100,
+      documents: %w(doc1 doc2 doc3)
+    }
+    fake_response = Struct.new(:body).new(JSON.generate(json))
+    spy = TestUtils::Spy.new(fake_response)
+    RestClient::Request.stub(:execute, spy.method) do
+      result = @search.send(:retrieve, @url, @query)
+      assert spy.called_once?
+      assert result.instance_of?(::MdnQuery::SearchResult)
+      assert_equal result.query, @query
+      assert_equal result.items, json[:documents]
+    end
+  end
+
   private
 
   def spy_execute_retrieve

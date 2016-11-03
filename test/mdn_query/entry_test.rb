@@ -33,4 +33,30 @@ class MdnQueryEntryTest < Minitest::Test
     assert spy.called_once?
     assert_equal @entry.content, content
   end
+
+  def test_retrieve_throws
+    spy = TestUtils::Spy.new
+    RestClient::Request.stub(:execute, spy.throws(RestClient::Exception)) do
+      error = assert_raises(::MdnQuery::HttpRequestFailed) do
+        @entry.send(:retrieve, @url)
+      end
+      assert_equal error.message, 'Could not retrieve entry'
+      assert spy.thrown_once?
+      assert_equal error.url, @url
+    end
+  end
+
+  def test_retrieve
+    title = 'Document title'
+    html = "<html><body><h1>#{title}</h1><article></article></body></html>"
+    fake_response = Struct.new(:body).new(html)
+    spy = TestUtils::Spy.new(fake_response)
+    RestClient::Request.stub(:execute, spy.method) do
+      result = @entry.send(:retrieve, @url)
+      assert spy.called_once?
+      assert result.instance_of?(::MdnQuery::Document)
+      assert_equal result.title, title
+      assert_equal result.url, @url
+    end
+  end
 end
