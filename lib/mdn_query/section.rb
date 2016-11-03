@@ -88,7 +88,7 @@ module MdnQuery
     end
 
     def join_children
-      children.map(&:to_s).join("\n")
+      children.map(&:to_s).join("\n\n")
     end
 
     def text_empty?(text)
