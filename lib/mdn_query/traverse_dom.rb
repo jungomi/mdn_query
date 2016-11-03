@@ -70,12 +70,18 @@ module MdnQuery
     #
     # @return [void]
     def traverse
-      unless @dom.css('div.nonStandard').nil?
+      unless @dom.css('div.nonStandard').empty?
         @current_section.append_text("\n> ***Non-standard***\n")
       end
-      within_blacklist = false
+      blacklist_level = nil
       @dom.children.each do |child|
-        next if within_blacklist && child.name.match(/\Ah\d\z/).nil?
+        if child_blacklisted?(child, blacklist_level)
+          if blacklist_level.nil?
+            blacklist_level = child.name.match(/\Ah(?<level>\d)\z/)[:level]
+          end
+          next
+        end
+        blacklist_level = nil
         case child.name
         when 'p'
           @current_section.append_text(child.text)
@@ -86,9 +92,8 @@ module MdnQuery
         when 'pre'
           @current_section.append_code(child.text, language: 'javascript')
         when /\Ah(?<level>\d)\z/
-          within_blacklist = blacklisted?(child[:id])
-          next if within_blacklist
-          create_child($LAST_MATCH_INFO[:level].to_i, child[:id].tr('_', ' '))
+          level = $LAST_MATCH_INFO[:level].to_i
+          create_child(level, child[:id].tr('_', ' '))
         when 'table'
           @current_section.append_text(convert_table(child))
         when 'div'
@@ -110,12 +115,22 @@ module MdnQuery
 
     private
 
+    def child_blacklisted?(child, blacklist_level)
+      match = child.name.match(/\Ah(?<level>\d)\z/)
+      if match.nil?
+        !blacklist_level.nil?
+      else
+        blacklisted?(child[:id]) ||
+          (!blacklist_level.nil? && match[:level] > blacklist_level)
+      end
+    end
+
     def convert_list(ul)
       lines = ul.children.map do |child|
         if child.name == 'ul'
           convert_list(child)
         elsif child.name == 'li'
-          "- #{child.text}"
+          "- #{child.text}\n"
         else
           child.text
         end
@@ -125,14 +140,15 @@ module MdnQuery
 
     def convert_description(dl)
       lines = dl.children.map do |child|
-        if child.name == 'dd' || child.name == 'dl'
+        if child.name == 'dl'
           convert_description(child)
         elsif child.name == 'dt'
           "\n**#{child.text}**\n"
         else
-          child.text
+          "\n#{child.text}\n"
         end
       end
+      # "#{lines.join}\n"
       lines.join
     end
 
