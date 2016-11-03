@@ -148,7 +148,6 @@ module MdnQuery
           "\n#{child.text}\n"
         end
       end
-      # "#{lines.join}\n"
       lines.join
     end
 
