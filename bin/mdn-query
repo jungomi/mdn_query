@@ -59,11 +59,16 @@ when [false, false]
     prompt.say "No results for '#{search_term}'"
     exit
   end
-  selected_entry = prompt.select("Results for '#{search_term}'") do |menu|
-    menu.enum ')'
-    list.each do |entry|
-      menu.choice entry.title, entry
+  begin
+    selected_entry = prompt.select("Results for '#{search_term}'") do |menu|
+      menu.enum ')'
+      list.each do |entry|
+        menu.choice entry.title, entry
+      end
     end
+    pager.page selected_entry.content
+  rescue TTY::Prompt::Reader::InputInterrupt
+    puts
+    exit
   end
-  pager.page selected_entry.content
 end
