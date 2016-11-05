@@ -1,5 +1,6 @@
 # MdnQuery
 
+[![Gem Version][gem-badge]][gem]
 [![Build Status][travis-img]][travis]
 
 Query the [Mozilla Developer Network][mdn] documentation. Unfortunately they do
@@ -9,6 +10,8 @@ representation. Another drawback is that it requires two network requests to
 retrieve a single entry based on a search term, which is frequently desired as
 a precise search term almost always yields the concrete entry as the first
 result.
+
+[Documentation][docs]
 
 ## CLI
 
@@ -143,6 +146,9 @@ Bug reports and pull requests are welcome on [GitHub][github-repo].
 The gem is available as open source under the terms of the [MIT License][mit].
 
 [demo]: screenshots/demo.gif
+[docs]: http://www.rubydoc.info/gems/mdn_query
+[gem]: https://badge.fury.io/rb/mdn_query
+[gem-badge]: https://badge.fury.io/rb/mdn_query.svg
 [github-repo]: https://github.com/jungomi/mdn-query
 [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 [mit]: http://opensource.org/licenses/MIT
