@@ -2,6 +2,8 @@
 
 [![Gem Version][gem-badge]][gem]
 [![Build Status][travis-img]][travis]
+[![Code Climate][codeclimate-badge]][codeclimate]
+[![Test Coverage][coverage-badge]][coverage]
 
 Query the [Mozilla Developer Network][mdn] documentation. Unfortunately they do
 not provide an API to fetch the documentation entries, which means that all
@@ -145,6 +147,10 @@ Bug reports and pull requests are welcome on [GitHub][github-repo].
 
 The gem is available as open source under the terms of the [MIT License][mit].
 
+[codeclimate]: https://codeclimate.com/github/jungomi/mdn_query
+[codeclimate-badge]: https://codeclimate.com/github/jungomi/mdn_query/badges/gpa.svg
+[coverage]: https://codeclimate.com/github/jungomi/mdn_query/coverage
+[coverage-badge]: https://codeclimate.com/github/jungomi/mdn_query/badges/coverage.svg
 [demo]: screenshots/demo.gif
 [docs]: http://www.rubydoc.info/gems/mdn_query
 [gem]: https://badge.fury.io/rb/mdn_query
