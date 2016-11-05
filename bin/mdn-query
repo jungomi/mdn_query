@@ -27,6 +27,8 @@ opts = Slop.parse do |o|
          'Returns the first match instead of a list'
   o.bool '-o', '--open', '--open-browser',
          'Opens the appropriate page in the default web browser'
+  o.array '-t', '--topics',
+          'The topics to search in, delimited by commas'
 end
 
 if opts.arguments.empty?
@@ -35,26 +37,29 @@ if opts.arguments.empty?
 end
 
 search_term = opts.arguments.join(' ')
+topics = opts[:topics]
+topics = ['js'] if topics.empty?
+
 case [opts.first?, opts.open?]
 when [true, true]
   begin
-    MdnQuery.open_first_match(search_term)
+    MdnQuery.open_first_match(search_term, topics: topics)
   rescue MdnQuery::NoEntryFound => e
     prompt.say e.message
     exit
   end
 when [true, false]
   begin
-    pager.page MdnQuery.first_match(search_term)
+    pager.page MdnQuery.first_match(search_term, topics: topics)
   rescue MdnQuery::NoEntryFound => e
     prompt.say e.message
     exit
   end
 when [false, true]
-  MdnQuery.open_list(search_term)
+  MdnQuery.open_list(search_term, topics: topics)
 when [false, false]
   begin
-    list = MdnQuery.list(search_term)
+    list = MdnQuery.list(search_term, topics: topics)
   rescue MdnQuery::NoEntryFound
     prompt.say "No results for '#{search_term}'"
     exit
