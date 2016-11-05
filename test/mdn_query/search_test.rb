@@ -2,6 +2,7 @@ require 'test_helper'
 
 class MdnQuerySearchTest < Minitest::Test
   def setup
+    @url = 'url'
     @query = 'Query'
     @search = ::MdnQuery::Search.new(@query)
   end

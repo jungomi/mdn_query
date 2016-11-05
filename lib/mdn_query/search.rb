@@ -28,6 +28,7 @@ module MdnQuery
       @highlight = options[:highlight] || false
       @html_attributes = options[:html_attributes]
       @topics = options[:topics] || ['js']
+      @result = nil
     end
     # rubocop:enable Metrics/LineLength
 

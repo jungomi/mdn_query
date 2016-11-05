@@ -14,6 +14,7 @@ module MdnQuery
       @title = title
       @description = description
       @url = url
+      @content = nil
     end
 
     # Returns the string representation of the entry.

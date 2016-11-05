@@ -2,22 +2,22 @@ require 'test_helper'
 
 class MdnQueryTraverseDomTest < Minitest::Test
   def setup
+    @url = 'url'
     @dom = 'Dom'
     @title = 'Title'
     @traverser = ::MdnQuery::TraverseDom.new(@dom, url: @url)
   end
 
   def test_create_document
-    url = 'url'
     spy = TestUtils::Spy.new
     ::MdnQuery::TraverseDom.stub(:fill_document, spy.method) do
-      ::MdnQuery::TraverseDom.create_document(@dom, @title, url)
+      ::MdnQuery::TraverseDom.create_document(@dom, @title, @url)
       assert spy.called_once?
       call_args = spy.call_args.first
       document = call_args[1]
       assert_equal call_args.first, @dom
       assert_equal document.title, @title
-      assert_equal document.url, url
+      assert_equal document.url, @url
     end
   end
 
