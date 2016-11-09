@@ -26,16 +26,15 @@ module MdnQuery
               'Could not retrieve search result'
       end
       json = JSON.parse(response.body, symbolize_names: true)
-      new(json[:query], json)
+      new(json)
     end
 
     # Creates a new search result.
     #
-    # @param query [String] the query that was searched for
     # @param json [Hash] the hash version of the JSON response
     # @return [MdnQuery::SearchResult]
-    def initialize(query, json)
-      @query = query
+    def initialize(json)
+      @query = json[:query]
       @pages = {
         count: json[:pages] || 0,
         current: json[:page]
