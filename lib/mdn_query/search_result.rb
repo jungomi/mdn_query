@@ -13,6 +13,22 @@ module MdnQuery
     # @return [Fixnum] the total number of entries
     attr_reader :total
 
+    # Creates a search result with the results from the URL.
+    #
+    # @param url [String] the URL to the search result on the web
+    # @return [MdnQuery::SearchResult]
+    def self.from_url(url)
+      begin
+        response = RestClient::Request.execute(method: :get, url: url,
+                                               headers: { accept: 'json' })
+      rescue RestClient::Exception, SocketError => e
+        raise MdnQuery::HttpRequestFailed.new(url, e),
+              'Could not retrieve search result'
+      end
+      json = JSON.parse(response.body, symbolize_names: true)
+      new(json[:query], json)
+    end
+
     # Creates a new search result.
     #
     # @param query [String] the query that was searched for

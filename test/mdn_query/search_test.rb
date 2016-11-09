@@ -43,11 +43,11 @@ class MdnQuerySearchTest < Minitest::Test
     result = 'Result'
     expected_url = "#{url}.json?q=Query&locale=en-US&topic=js&highlight=false"
     spy = TestUtils::Spy.new(result)
-    @search.stub(:retrieve, spy.method) do
+    ::MdnQuery::SearchResult.stub(:from_url, spy.method) do
       assert @search.result.nil?
       @search.execute
       assert spy.called_once?
-      assert spy.called_with_args?(expected_url, @query)
+      assert spy.called_with_args?(expected_url)
       assert_equal @search.result, result
     end
   end
@@ -70,7 +70,7 @@ class MdnQuerySearchTest < Minitest::Test
       @search.next_page
       refute execute.called?
       assert retrieve.called_once?
-      assert retrieve.called_with_args?(expected_url, @query)
+      assert retrieve.called_with_args?(expected_url)
     end
   end
 
@@ -102,7 +102,7 @@ class MdnQuerySearchTest < Minitest::Test
       @search.previous_page
       refute execute.called?
       assert retrieve.called_once?
-      assert retrieve.called_with_args?(expected_url, @query)
+      assert retrieve.called_with_args?(expected_url)
     end
   end
 
@@ -124,43 +124,13 @@ class MdnQuerySearchTest < Minitest::Test
     assert spy.called_with_args?(expected_url)
   end
 
-  def test_retrieve_throws
-    spy = TestUtils::Spy.new
-    RestClient::Request.stub(:execute, spy.throws(RestClient::Exception)) do
-      error = assert_raises(::MdnQuery::HttpRequestFailed) do
-        @search.send(:retrieve, @url, @query)
-      end
-      assert_equal error.message, 'Could not retrieve search result'
-      assert spy.thrown_once?
-      assert_equal error.url, @url
-    end
-  end
-
-  def test_retrieve
-    json = {
-      pages: 10,
-      page: 1,
-      count: 100,
-      documents: %w(doc1 doc2 doc3)
-    }
-    fake_response = Struct.new(:body).new(JSON.generate(json))
-    spy = TestUtils::Spy.new(fake_response)
-    RestClient::Request.stub(:execute, spy.method) do
-      result = @search.send(:retrieve, @url, @query)
-      assert spy.called_once?
-      assert result.instance_of?(::MdnQuery::SearchResult)
-      assert_equal result.query, @query
-      assert_equal result.items, json[:documents]
-    end
-  end
-
   private
 
   def spy_execute_retrieve
     execute_spy = TestUtils::Spy.new
     retrieve_spy = TestUtils::Spy.new
     @search.stub(:execute, execute_spy.method) do
-      @search.stub(:retrieve, retrieve_spy.method) do
+      ::MdnQuery::SearchResult.stub(:from_url, retrieve_spy.method) do
         yield execute_spy, retrieve_spy
       end
     end

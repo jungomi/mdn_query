@@ -52,7 +52,7 @@ module MdnQuery
     #
     # @return [MdnQuery::SearchResult] the search result
     def execute
-      @result = retrieve(url, @query)
+      @result = MdnQuery::SearchResult.from_url(url)
     end
 
     # Fetches the next page of the search result.
@@ -67,7 +67,7 @@ module MdnQuery
       elsif @result.next?
         query_url = url
         query_url << "&page=#{@result.current_page + 1}"
-        @result = retrieve(query_url, @query)
+        @result = MdnQuery::SearchResult.from_url(query_url)
       end
     end
 
@@ -83,7 +83,7 @@ module MdnQuery
       elsif @result.previous?
         query_url = url
         query_url << "&page=#{@result.current_page - 1}"
-        @result = retrieve(query_url, @query)
+        @result = MdnQuery::SearchResult.from_url(query_url)
       end
     end
 
@@ -93,20 +93,6 @@ module MdnQuery
     def open
       html_url = url.sub('.json?', '?')
       Launchy.open(html_url)
-    end
-
-    private
-
-    def retrieve(url, query)
-      begin
-        response = RestClient::Request.execute(method: :get, url: url,
-                                               headers: { accept: 'json' })
-      rescue RestClient::Exception, SocketError => e
-        raise MdnQuery::HttpRequestFailed.new(url, e),
-              'Could not retrieve search result'
-      end
-      json = JSON.parse(response.body, symbolize_names: true)
-      MdnQuery::SearchResult.new(query, json)
     end
   end
 end
