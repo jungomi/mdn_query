@@ -7,6 +7,26 @@ module MdnQuery
     # @return [MdnQuery::Section] the top level section
     attr_reader :section
 
+    # Creates a document filled with the content of the URL.
+    #
+    # @param url [String] the URL to the document on the web
+    # @return [MdnQuery::Document]
+    def self.from_url(url)
+      begin
+        response = RestClient::Request.execute(method: :get, url: url,
+                                               headers: { accept: 'text/html' })
+      rescue RestClient::Exception, SocketError => e
+        raise MdnQuery::HttpRequestFailed.new(url, e),
+              'Could not retrieve entry'
+      end
+      dom = Nokogiri::HTML(response.body)
+      title = dom.css('h1').text
+      article = dom.css('article')
+      document = new(title, url)
+      MdnQuery::TraverseDom.fill_document(article, document)
+      document
+    end
+
     # Creates a new document with an initial top level section.
     #
     # @param title [String] the titel of the top level section

@@ -41,23 +41,7 @@ module MdnQuery
     # @return [MdnQuery::Document] the content of the entry
     def content
       return @content unless @content.nil?
-      @content = retrieve(url)
-    end
-
-    private
-
-    def retrieve(url)
-      begin
-        response = RestClient::Request.execute(method: :get, url: url,
-                                               headers: { accept: 'text/html' })
-      rescue RestClient::Exception, SocketError => e
-        raise MdnQuery::HttpRequestFailed.new(url, e),
-              'Could not retrieve entry'
-      end
-      dom = Nokogiri::HTML(response.body)
-      title = dom.css('h1').text
-      article = dom.css('article')
-      MdnQuery::TraverseDom.create_document(article, title, url)
+      @content = MdnQuery::Document.from_url(url)
     end
   end
 end
