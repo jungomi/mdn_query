@@ -154,7 +154,7 @@ module MdnQuery
         if child.name == 'dl'
           convert_description(child)
         elsif child.name == 'dt'
-          "\n**#{child.text}**\n"
+          "\n**#{child.text.strip}**\n"
         else
           "\n#{child.text}\n"
         end
