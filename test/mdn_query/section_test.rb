@@ -49,6 +49,15 @@ class MdnQuerySectionTest < Minitest::Test
     assert_equal @section.text.last, expected_text
   end
 
+  def test_append_text_html_tags
+    expected_text_size = @section.text.size + 1
+    text = '<tag> is useful in <other>'
+    expected_text = '`<tag>` is useful in `<other>`'
+    @section.append_text(text)
+    assert_equal @section.text.size, expected_text_size
+    assert_equal @section.text.last, expected_text
+  end
+
   def test_append_code
     expected_text_size = @section.text.size + 1
     text = 'const num = 42'

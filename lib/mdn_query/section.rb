@@ -23,7 +23,7 @@ module MdnQuery
     # @param parent [MdnQuery::Section] the parent section
     # @return [MdnQuery::Section]
     def initialize(name, level: 1, parent: nil)
-      @name = name
+      @name = escape_html_tags(name)
       @level = level
       @parent = parent
       @text = []
@@ -48,8 +48,9 @@ module MdnQuery
     # @param text [String] the text segment to append
     # @return [void]
     def append_text(text)
-      trimmed_text = text.gsub(/\n[[:blank:]]+|[[:blank:]]+\n/, "\n")
-      @text << trimmed_text unless text_empty?(trimmed_text)
+      trimmed = text.gsub(/\n[[:blank:]]+|[[:blank:]]+\n/, "\n")
+      escaped = escape_html_tags(trimmed)
+      @text << escaped unless text_empty?(escaped)
     end
 
     # Appends a code segment to the section.
@@ -82,6 +83,10 @@ module MdnQuery
     end
 
     private
+
+    def escape_html_tags(text)
+      text.gsub(/(<\w+>)/, '`\1`')
+    end
 
     def join_text
       text.join("\n")
