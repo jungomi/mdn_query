@@ -94,11 +94,11 @@ module MdnQuery
             @current_section.append_code(child.text)
             next
           end
-          match = child[:class].match(/brush:\s*(\w+)/)
+          match = child[:class].match(/brush:\s*(?<lang>\w+)/)
           if match.nil?
             @current_section.append_code(child.text)
           else
-            lang = match[1]
+            lang = match[:lang]
             lang = 'javascript' if lang == 'js'
             @current_section.append_code(child.text, language: lang)
           end
