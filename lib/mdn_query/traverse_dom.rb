@@ -172,7 +172,7 @@ module MdnQuery
                extract_table_row(head_row)
              end
       table = MdnQuery::Table.new(head, *body)
-      table.to_s
+      "\n#{table}\n"
     end
 
     def extract_table_row(tr)
