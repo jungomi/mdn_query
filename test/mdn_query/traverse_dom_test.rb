@@ -79,7 +79,7 @@ class MdnQueryTraverseDomTest < Minitest::Test
 
   def test_traverse_text
     html = '<article><p>Paragraph</p><pre>Code</pre></article>'
-    expected = "# root\n\nParagraph\n\n```javascript\nCode\n```"
+    expected = "# root\n\nParagraph\n\n```\nCode\n```"
     root = traverse_html(html)
     assert_equal root.text.size, 2
     assert_equal root.to_s, expected
@@ -118,6 +118,17 @@ class MdnQueryTraverseDomTest < Minitest::Test
       '| 21  | 22  |'
     root = traverse_html(html)
     assert_equal root.text.size, 1
+    assert_equal root.to_s, expected
+  end
+
+  def test_traverse_code
+    html = '<article><pre>Nothing</pre><pre class="brush: html">HTML</pre>'\
+      '<pre class="brush:css">CSS</pre><pre class="brush: js">JavaScript</pre>'\
+      '<pre class="other-class">Other</pre></article>'
+    expected = "# root\n\n```\nNothing\n```\n\n```html\nHTML\n```\n\n"\
+      "```css\nCSS\n```\n\n```javascript\nJavaScript\n```\n\n```\nOther\n```"
+    root = traverse_html(html)
+    assert_equal root.text.size, 5
     assert_equal root.to_s, expected
   end
 

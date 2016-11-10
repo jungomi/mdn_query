@@ -90,7 +90,18 @@ module MdnQuery
         when 'dl'
           @current_section.append_text(convert_description(child))
         when 'pre'
-          @current_section.append_code(child.text, language: 'javascript')
+          if child[:class].nil?
+            @current_section.append_code(child.text)
+            next
+          end
+          match = child[:class].match(/brush:\s*(\w+)/)
+          if match.nil?
+            @current_section.append_code(child.text)
+          else
+            lang = match[1]
+            lang = 'javascript' if lang == 'js'
+            @current_section.append_code(child.text, language: lang)
+          end
         when /\Ah(?<level>\d)\z/
           level = $LAST_MATCH_INFO[:level].to_i
           create_child(level, child[:id].tr('_', ' '))
