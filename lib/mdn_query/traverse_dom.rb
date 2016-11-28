@@ -110,7 +110,7 @@ module MdnQuery
         when 'div'
           next if child[:class].nil?
           if child[:class].include?('note') || child[:class].include?('warning')
-            @current_section.append_text("\n> #{child.text}\n")
+            @current_section.append_text("\n> #{child.text.strip}\n")
           end
         end
       end
