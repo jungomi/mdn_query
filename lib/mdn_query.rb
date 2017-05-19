@@ -1,4 +1,5 @@
 require 'English'
+require 'json'
 require 'nokogiri'
 require 'launchy'
 require 'rest-client'
