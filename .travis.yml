@@ -2,7 +2,6 @@ sudo: false
 language: ruby
 os:
   - linux
-  - osx
 cache:
   bundler: true
 rvm:
