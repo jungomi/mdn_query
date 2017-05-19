@@ -2,12 +2,12 @@ require 'test_helper'
 
 class MdnQueryTableTest < Minitest::Test
   def setup
-    @heading = %w(Title Description)
+    @heading = %w[Title Description]
     @table = ::MdnQuery::Table.new(@heading)
   end
 
   def test_add_row_of_same_size
-    row = %w(One Number)
+    row = %w[One Number]
     size_before = @table.size
     rows_before = @table.rows
     @table.add_row(row)
@@ -28,7 +28,7 @@ class MdnQueryTableTest < Minitest::Test
   end
 
   def test_add_row_of_bigger_size
-    row = %w(One Number More)
+    row = %w[One Number More]
     expected_heading = [*@table.heading, '']
     rows_before = @table.rows
     @table.add_row(row)

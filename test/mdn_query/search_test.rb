@@ -33,7 +33,7 @@ class MdnQuerySearchTest < Minitest::Test
   end
 
   def test_url_with_multiple_topics
-    @search.topics = %w(js css html)
+    @search.topics = %w[js css html]
     expected_url = "#{url}.json?q=Query&locale=en-US&topic=js"\
       '&topic=css&topic=html&highlight=false'
     assert_equal @search.url, expected_url

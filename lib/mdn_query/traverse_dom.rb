@@ -11,7 +11,7 @@ module MdnQuery
     attr_reader :document
 
     # Sections that are blacklisted and excluded from the document.
-    BLACKLIST = %w(Specifications Browser_compatibility).freeze
+    BLACKLIST = %w[Specifications Browser_compatibility].freeze
 
     # Creates a new document with the extracted text.
     #

@@ -15,4 +15,4 @@ end
 
 RuboCop::RakeTask.new(:lint)
 
-task default: [:lint, :test]
+task default: %i[lint test]

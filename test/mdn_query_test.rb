@@ -11,7 +11,7 @@ class MdnQueryTest < Minitest::Test
   end
 
   def test_list
-    expected = %w(one two three)
+    expected = %w[one two three]
     spy = TestUtils::Spy.new(fake_search(expected))
     ::MdnQuery::Search.stub(:new, spy.method) do
       list = ::MdnQuery.list(@query)
